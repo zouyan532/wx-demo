@@ -22,6 +22,7 @@ class LoginInputText extends Component{
                     underlineColorAndroid='transparent'
                     style={styles.textInput}
                     onChangeText={this._onChange}
+                    secureTextEntry={this.props.secureTextEntry?this.props.secureTextEntry:false}
                     />
                     
             </View>

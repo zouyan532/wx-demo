@@ -1,5 +1,5 @@
 import React from 'react';
-import { KeyboardAvoidingView,View, Image, Text, StyleSheet,ScrollView, TextInput,TouchableHighlight,FlatList } from 'react-native';
+import { KeyboardAvoidingView,View,ToastAndroid,Image, Text, StyleSheet,ScrollView, TextInput,TouchableHighlight,FlatList } from 'react-native';
 import LoginInputText from '../../components/LoginInputText';
 import {connect} from 'dva';
 const styles = StyleSheet.create({
@@ -70,17 +70,18 @@ class Demo extends React.Component {
             password:"",
             phone:"",
             vCode:"",
-            _timer:null,
             _index:10,
             vcodeBtnText:'验证码'
         }
     }
 
+    _timer=null
+
     componentWillMount(){//使用的到
     }
     
     componentWillUnmount(){
-        this.state._timer && clearInterval(this.state._timer);  
+        this._timer && clearInterval(this._timer);  
     }
 
     onShipNumberChange=(param)=>{
@@ -105,14 +106,13 @@ class Demo extends React.Component {
     }
     vCodeOnPress=(param)=>{
         if(this.state._index>=10){
-            
-            this.state._timer = setInterval(()=>{
+            this._timer = setInterval(()=>{
                 this.setState({
                     _index:this.state._index-1,
                     vcodeBtnText:this.state._index+'s'
                 })
                 if(this.state._index<=0){
-                    this.state._timer&&clearInterval(this.state._timer)
+                    this._timer&&clearInterval(this._timer)
                     this.setState({
                         _index:10,
                         vcodeBtnText:'重新获取'
@@ -123,6 +123,22 @@ class Demo extends React.Component {
     }
     loginOnPress=(param)=>{
         console.log(this.state.password)
+        if(this.state.shipNumber==""){
+            ToastAndroid.show('请输入船号',ToastAndroid.SHORT)
+            return
+        }
+        if(this.state.password===""){
+            ToastAndroid.show('请输入密码', ToastAndroid.SHORT)
+            return
+        }
+        if(this.state.phone===""){
+            ToastAndroid.show('请输入密手机号', ToastAndroid.SHORT)
+            return
+        }
+        if(this.state.vCode===""){
+            ToastAndroid.show('请输入验证码', ToastAndroid.SHORT)
+            return
+        }
         this.props.dispatch({
             type:'demo/getToken',
             shipNumber:this.state.shipNumber,
@@ -148,6 +164,7 @@ class Demo extends React.Component {
                         <LoginInputText 
                             placeholder="请输入您密码"
                             onChange={this.onPasswordChange}
+                            secureTextEntry={true}
                             img={require('../../image/login_pas.png')}>
                         </LoginInputText>
                         <LoginInputText 
@@ -162,7 +179,7 @@ class Demo extends React.Component {
                                 img={require('../../image/login_ver_cod.png')}>
                             </LoginInputText>
                             <View style={styles.view_btn_vcode}>
-                                <TouchableHighlight style={styles.vCodeBtn} onPress={this.vCodeOnPress}  underlayColor='#8dcfff' >
+                                <TouchableHighlight style={styles.vCodeBtn} onPress={this.vCodeOnPress}  underlayColor='#8dcaaf' >
                                     <Text style={styles.vcodeText} >{this.state.vcodeBtnText}</Text>
                                 </TouchableHighlight>
                             </View>
