@@ -70,6 +70,9 @@ class Demo extends React.Component {
             password:"",
             phone:"",
             vCode:"",
+            _timer:null,
+            _index:10,
+            vcodeBtnText:'验证码'
         }
     }
 
@@ -77,17 +80,15 @@ class Demo extends React.Component {
     }
     
     componentWillUnmount(){
-        
+        this.state._timer && clearInterval(this.state._timer);  
     }
 
     onShipNumberChange=(param)=>{
-        console.log(param)
         this.setState({
             shipNumber:param
         });
     }
     onPasswordChange=(param)=>{
-        console.log(param)
         this.setState({
             password:param
         })
@@ -103,7 +104,32 @@ class Demo extends React.Component {
         })
     }
     vCodeOnPress=(param)=>{
-
+        if(this.state._index>=10){
+            
+            this.state._timer = setInterval(()=>{
+                this.setState({
+                    _index:this.state._index-1,
+                    vcodeBtnText:this.state._index+'s'
+                })
+                if(this.state._index<=0){
+                    this.state._timer&&clearInterval(this.state._timer)
+                    this.setState({
+                        _index:10,
+                        vcodeBtnText:'重新获取'
+                    })
+                }
+            },1000)
+        }
+    }
+    loginOnPress=(param)=>{
+        console.log(this.state.password)
+        this.props.dispatch({
+            type:'demo/getToken',
+            shipNumber:this.state.shipNumber,
+            password:this.state.password,
+            phone:this.state.phone,
+            vCode:this.state.vCode,
+       })     
     }
     render() {
       
@@ -136,13 +162,13 @@ class Demo extends React.Component {
                                 img={require('../../image/login_ver_cod.png')}>
                             </LoginInputText>
                             <View style={styles.view_btn_vcode}>
-                                <TouchableHighlight style={styles.vCodeBtn} onPress={this.vCodeOnPress} >
-                                    <Text style={styles.vcodeText} >验证码</Text>
+                                <TouchableHighlight style={styles.vCodeBtn} onPress={this.vCodeOnPress}  underlayColor='#8dcfff' >
+                                    <Text style={styles.vcodeText} >{this.state.vcodeBtnText}</Text>
                                 </TouchableHighlight>
                             </View>
                         </View>
                         <View style={styles.view_login}>
-                            <TouchableHighlight style={styles.btn_login} onPress={this.vCodeOnPress} >
+                            <TouchableHighlight style={styles.btn_login} onPress={this.loginOnPress} underlayColor='#8dcfff' >
                                 <Text style={styles.vcodeText} >登陆</Text>
                             </TouchableHighlight>
                         </View>

@@ -12,7 +12,7 @@ export default class MyRouter extends Component {
                 <Stack key="root">
                     <Scene key="Demo" hideNavBar component={Demo} title="Demo"></Scene>
                     <Scene key="Main" component={Main} title="Main"></Scene>
-                    <Scene key="Info" component={Info} title="Info"></Scene>
+                    {/* <Scene key="Info" com1ponent={Info} title="Info"></Scene> */}
                     <Scene key="Ware" component={Ware} title="Ware"></Scene>
                     <Scene key="Setting"component={Setting} title="Setting"></Scene>
                 </Stack>
