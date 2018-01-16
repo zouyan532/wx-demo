@@ -4,7 +4,7 @@ import *as service from '../../services/CaptainService.js'
 import React, {
 	     AsyncStorage
 	 }from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 const { ConnectedRouter } = routerRedux;
 export default {
 	namespace: 'demo',
@@ -33,7 +33,7 @@ export default {
 				type:'saveToken',
 				payload:res.data.token
 			})
-			Actions.Apply()
+			Actions.Apply({'type':ActionConst.REPLACE})
 		},
 	
 	},

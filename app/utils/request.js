@@ -1,5 +1,6 @@
 
 
+
 function parseJSON(response) {
   return response.json();
 }
@@ -26,12 +27,19 @@ export default function request(url,params,method) {
     console.log(params)
     return post(url,params)
   }else{
-    return get(url)
+    return get(url,params)
   }
 }
 
-function get(url) {
-  return fetch(url)
+function get(url,params) {
+  return fetch(url,{
+    method:'Get',
+    headers:{
+      'Authorization':params.token,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
   .then(checkStatus)
   .then(parseJSON)
   .then(data => ({ data }))
@@ -40,15 +48,28 @@ function get(url) {
 
 function post(url,params) {
     console.log(params)
-    return fetch(url,{
+    let promise;
+    if(params.token){
+      promise = fetch(url,{
         method:'Post',
         headers:{
-          'token':params.token,
+          'Authorization':params.token,
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body:JSON.stringify(params.body)
       })
+    }else{
+      promise = fetch(url,{
+        method:'Post',
+        headers:{
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify(params.body)
+      })
+    }
+    return promise
     .then(function checkStatus(response) {
       console.log(response)
       if (response.status >= 200 && response.status < 300) {

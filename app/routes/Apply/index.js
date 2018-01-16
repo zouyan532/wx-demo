@@ -4,6 +4,10 @@ import { View, Image, Text, StyleSheet, TextInput,TouchableHighlight, ScrollView
 import {connect} from 'dva';
 import { Actions } from 'react-native-router-flux';
 import DefaultNavBar from '../../components/DefaultNavBar.js'
+import AlertSelected from '../../components/AlertSelected.js'
+
+const selectedArr = ["拍照", "图库"];
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -101,6 +105,33 @@ class Apply extends React.Component {
     onBack=()=>{
         Actions.pop()
     }
+
+    componentDidMount(){
+        this.props.dispatch({
+            type:'Apply/getCurrentUser'
+        })
+        
+        this.props.dispatch({
+            type:'Apply/getLoadTypeCategories'
+        })
+    }
+
+    // callbackSelected(i){
+    //     switch (i){
+    //         case 0: // 拍照
+    //         console.log("点到1")
+    //         break;
+    //         case 1: // 图库
+    //         console.log('点到2')
+    //         break;
+    //     }
+    // }
+
+    lockOnPress=()=>{
+        // this.dialog.show("请选择照片", selectedArr, '#333333', this.callbackSelected);
+  
+    }
+
     render() {
         return (
             <View style={styles.container} >
@@ -114,7 +145,7 @@ class Apply extends React.Component {
                     <ScrollView>
                         <View style={styles.whiteContainer}>
                             <Image style={styles.top_img} source={require('../../image/apply_top_ill_img.png')}/>
-                            <TouchableHighlight underlayColor="transparent" style={styles.btn_blue_border}>
+                            <TouchableHighlight underlayColor="transparent" style={styles.btn_blue_border} onPress={this.lockOnPress}>
                                 <View style={styles.view_blue_border}>
                                     <Text style={styles.text_key}>进出</Text>
                                     <View style={styles.view_right}>
@@ -183,6 +214,9 @@ class Apply extends React.Component {
                         </View>
                     </ScrollView>
                 </View>
+                {/* <AlertSelected ref={(dialog)=>{
+                        this.dialog = dialog;
+                }} />  */}
             </View>
         );
     }
