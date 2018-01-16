@@ -6,8 +6,6 @@ import { Actions } from 'react-native-router-flux';
 import DefaultNavBar from '../../components/DefaultNavBar.js'
 import AlertSelected from '../../components/AlertSelected.js'
 
-const selectedArr = ["拍照", "图库"];
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -102,6 +100,13 @@ const styles = StyleSheet.create({
 });
 
 class Apply extends React.Component {
+    constructor(props){
+        super(props)
+        this.state={
+            selectedArr:[],
+            clickPosition:-1,
+        }
+    }
     onBack=()=>{
         Actions.pop()
     }
@@ -116,22 +121,31 @@ class Apply extends React.Component {
         })
     }
 
-    // callbackSelected(i){
-    //     switch (i){
-    //         case 0: // 拍照
-    //         console.log("点到1")
-    //         break;
-    //         case 1: // 图库
-    //         console.log('点到2')
-    //         break;
-    //     }
-    // }
-
-    lockOnPress=()=>{
-        // this.dialog.show("请选择照片", selectedArr, '#333333', this.callbackSelected);
-  
+    callbackSelected(i){
+      
     }
 
+    _OnPressLock=()=>{
+        this.setState({
+            selectedArr:["进闸","出闸"],
+            clickPosition:0,
+        },function chageDialog(params) {
+            console.log(this.state)
+            this.dialog.show(this.state.selectedArr, this.callbackSelected);
+        })
+    }
+    
+    _OnPressShipNumber=()=>{
+
+    }
+
+    _OnPressGoodType=()=>{
+
+    }
+
+    _OnPressGoodName=()=>{
+
+    }
     render() {
         return (
             <View style={styles.container} >
@@ -145,7 +159,7 @@ class Apply extends React.Component {
                     <ScrollView>
                         <View style={styles.whiteContainer}>
                             <Image style={styles.top_img} source={require('../../image/apply_top_ill_img.png')}/>
-                            <TouchableHighlight underlayColor="transparent" style={styles.btn_blue_border} onPress={this.lockOnPress}>
+                            <TouchableHighlight underlayColor="transparent" style={styles.btn_blue_border} onPress={this._OnPressLock}>
                                 <View style={styles.view_blue_border}>
                                     <Text style={styles.text_key}>进出</Text>
                                     <View style={styles.view_right}>
@@ -154,7 +168,7 @@ class Apply extends React.Component {
                                     </View>
                                 </View>
                             </TouchableHighlight>
-                            <TouchableHighlight underlayColor="transparent" style={styles.btn_blue_border}>
+                            <TouchableHighlight underlayColor="transparent" style={styles.btn_blue_border} onPress={this._OnPressShipNumber}>
                                 <View style={styles.view_blue_border}>
                                     <Text style={styles.text_key}>船号</Text>
                                     <View style={styles.view_right}>
@@ -163,7 +177,7 @@ class Apply extends React.Component {
                                     </View>
                                 </View>
                             </TouchableHighlight>
-                            <TouchableHighlight underlayColor="transparent" style={styles.btn_blue_border}>
+                            <TouchableHighlight underlayColor="transparent" style={styles.btn_blue_border} onPress={this._OnPressGoodType}>
                                 <View style={styles.view_blue_border}>
                                     <Text style={styles.text_key}>载货种类</Text>
                                     <View style={styles.view_right}>
@@ -172,7 +186,7 @@ class Apply extends React.Component {
                                     </View>
                                 </View>
                             </TouchableHighlight>
-                            <TouchableHighlight underlayColor="transparent" style={styles.btn_blue_border}>
+                            <TouchableHighlight underlayColor="transparent" style={styles.btn_blue_border} onPress={this._OnPressGoodName}>
                                 <View style={styles.view_blue_border}>
                                     <Text style={styles.text_key}>货物名称</Text>
                                     <View style={styles.view_right}>
@@ -186,7 +200,6 @@ class Apply extends React.Component {
                                     <Text style={styles.text_key}>船主</Text>
                                     <View style={styles.view_right}>
                                         <Text style={styles.text_value}>小城</Text>
-                                        <Image style={styles.img_select} source={require('../../image/apply_drop_down.png')}/>
                                     </View>
                                 </View>
                             </TouchableHighlight>
@@ -214,9 +227,10 @@ class Apply extends React.Component {
                         </View>
                     </ScrollView>
                 </View>
-                {/* <AlertSelected ref={(dialog)=>{
-                        this.dialog = dialog;
-                }} />  */}
+                <AlertSelected 
+                    ref={(dialog)=>{
+                            this.dialog = dialog;
+                    }} /> 
             </View>
         );
     }
@@ -227,6 +241,8 @@ class Apply extends React.Component {
 const mapStateToProps = (state, ownProps) => {
 	console.log(state, ownProps)
 	return {
+        user:state.Apply.user,
+        loadTypeCategories:state.Apply.loadTypeCategories
 	};
 }
 

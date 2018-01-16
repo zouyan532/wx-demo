@@ -23,12 +23,11 @@ export default class AlertSelected extends Component {
     this.state = {
       offset: new Animated.Value(0),
       opacity: new Animated.Value(0),
-      title: "",
       choose0: "",
       choose1: "",
       hide: true,
       tipTextColor: '#333333',
-      aHeight: 236,
+      aHeight: height,
     };
     this.entityList = [];//数据源
     this.callback = function () {
@@ -59,14 +58,11 @@ export default class AlertSelected extends Component {
             transform: [{
               translateY: this.state.offset.interpolate({
                 inputRange: [0, 1],
-                outputRange: [height, (height - this.state.aHeight - 34)]
+                outputRange: [height, (height - this.state.aHeight - 10)]
               }),
             }]
           }]}>
             <View style={styles.content}>
-            <View style={styles.tipTitleView}>
-              <Text style={styles.tipTitleText}>{this.state.title}</Text>
-            </View>
             {
               this.entityList.map((item, i) => this.renderItem(item, i))
             }
@@ -121,7 +117,7 @@ export default class AlertSelected extends Component {
         this.state.opacity,
         {
           easing: Easing.linear,//一个用于定义曲线的渐变函数
-          duration: 200,//动画持续的时间（单位是毫秒），默认为200。
+          duration:300,//动画持续的时间（单位是毫秒），默认为200。
           toValue: 0.8,//动画的最终值
         }
       ),
@@ -129,7 +125,7 @@ export default class AlertSelected extends Component {
         this.state.offset,
         {
           easing: Easing.linear,
-          duration: 200,
+          duration:300,
           toValue: 1,
         }
       )
@@ -143,7 +139,7 @@ export default class AlertSelected extends Component {
         this.state.opacity,
         {
           easing: Easing.linear,
-          duration: 200,
+          duration:300,
           toValue: 0,
         }
       ),
@@ -151,7 +147,7 @@ export default class AlertSelected extends Component {
         this.state.offset,
         {
           easing: Easing.linear,
-          duration: 200,
+          duration:300,
           toValue: 0,
         }
       )
@@ -175,25 +171,14 @@ export default class AlertSelected extends Component {
     }
   }
  
- /**
- * 弹出控件，最多支持3个选项(包括取消)
- * titile: 标题
- * entityList：选择项数据  数组
- * tipTextColor: 字体颜色
- * callback：回调方法
- */
- show(title, entityList, tipTextColor, callback) {
+ show( entityList, callback) {
    this.entityList = entityList;
    this.callback = callback;
  
    if (this.state.hide) {
      if (entityList && entityList.length > 0) {
-       let len = entityList.length;
-       if (len === 1) {
-         this.setState({title: title, choose0: entityList[0], hide: false, tipTextColor: tipTextColor, aHeight: 180}, this.in);
-       } else if (len === 2) {
-         this.setState({title: title, choose0: entityList[0], choose1: entityList[1], hide: false, tipTextColor: tipTextColor, aHeight: 236}, this.in);
-       }
+        let len = entityList.length;
+        this.setState({ hide: false, aHeight: 45*(len+1)+10}, this.in);
      }
    }
  }
@@ -219,7 +204,7 @@ const styles = StyleSheet.create({
   },
   // 提示标题
   tipTitleView: {
-    height: 56,
+    height: 45,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -235,20 +220,20 @@ const styles = StyleSheet.create({
   // 分割线
   tipContentView: {
     width: aWidth,
-    height: 56,
+    height: 45,
     backgroundColor:'#fff',
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
   },
   item:{
     width: aWidth,
-    height: 56,
+    height: 45,
     backgroundColor:'#fff',
     justifyContent: 'center',
     borderRadius: 5,
   },
   button: {
-    height: 57,
+    height: 46,
     backgroundColor: '#fff',
     alignSelf: 'stretch',
     justifyContent: 'center',
