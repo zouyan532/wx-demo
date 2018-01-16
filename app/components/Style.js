@@ -77,6 +77,35 @@ view_input:{
     height:45,
     marginTop:20,
 },
+headContainer:{
+    height:60,
+    flexDirection:'row',
+    paddingTop:20,
+    backgroundColor:'#ffffff',
+},
+rowJustifyCenter:{
+    alignItems:'center',
+    justifyContent:'center',
+    flexDirection:'row'
+},
+img_toolBarLeft:{
+    alignItems:'center',
+    height:30,
+    width:30,
+    marginLeft:17,
+},
+titleText:{
+    alignItems:'center',
+    justifyContent:'center',
+    textAlign:'center',
+    fontSize:18
+},
+flex1:{
+    flex:1
+},
+flex9:{
+    flex :9
+}
 }
 
 export default Style;
