@@ -33,3 +33,14 @@ export async function getCurrentUser() {
     console.log(params)
     return await request(url,params,'Get')
 }
+
+export async function apply(requestBody) {
+    let url = baseUrl+'/api/v1/trafficOrders'
+    let token = await AsyncStorage.getItem('token')
+    let params ={
+        token:token,
+        body:requestBody
+    }
+    console.log(params)
+    return await request(url,params,"Post")
+}

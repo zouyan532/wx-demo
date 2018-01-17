@@ -30,6 +30,10 @@ export default {
 				type:'setLoadTypeCategories',
 				payload:res.data
 			})
+		},
+		*apply(params,{put,call}){
+			const res = yield call(service.apply,params.payload)
+			console.log(res)
 		}
 	},
 	reducers: {

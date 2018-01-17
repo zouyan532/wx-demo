@@ -5,6 +5,7 @@ import {connect} from 'dva';
 import { Actions } from 'react-native-router-flux';
 import DefaultNavBar from '../../components/DefaultNavBar.js'
 import AlertSelected from '../../components/AlertSelected.js'
+import request from '../../utils/request';
 
 const styles = StyleSheet.create({
     container: {
@@ -160,41 +161,48 @@ class Apply extends React.Component {
             })
           break;
           case 1:
-          this.setState({
-              shipNumber:this.props.user.ships[i].shipIdentity,
-              shipOwner:this.props.user.ships[i].ownerName,
-              capacity:this.props.user.ships[i].capacity?this.props.user.ships[i]:'0'+'t',
-              length:this.props.user.ships[i].length?this.props.user.ships[i]:'0'+'m',
-              request:{
-                  ...this.state.request,
-                  ship:{
-                    id:this.props.user.ships[i].id
-                  }
-              }
-          },()=>{
-              console.log(this.state.request)
-          })
+            this.setState({
+                shipNumber:this.props.user.ships[i].shipIdentity,
+                shipOwner:this.props.user.ships[i].ownerName,
+                capacity:this.props.user.ships[i].capacity?this.props.user.ships[i]:'0'+'t',
+                length:this.props.user.ships[i].length?this.props.user.ships[i]:'0'+'m',
+                request:{
+                    ...this.state.request,
+                    ship:{
+                        id:this.props.user.ships[i].id
+                    }
+                }
+            },()=>{
+                console.log(this.state.request)
+            })
           break
           case 2:
-          this.setState({
-              clickGoodType:i,
-              goodType:this.props.loadTypeCategories[i].name
-          },()=>{
-              console.log(this.state.clickGoodType)
-          })
+            this.setState({
+                clickGoodType:i,
+                goodType:this.props.loadTypeCategories[i].name,
+                goodName:'选择货物',
+                request:{
+                    ...this.state.request,
+                    loadType:{
+                        id:-1
+                    }
+                }
+            },()=>{
+                console.log(this.state.clickGoodType)
+            })
           break
           case 3:
-          this.setState({
-              goodName:this.props.loadTypeCategories[this.state.clickGoodType].loadTypes[1].name,
-              request:{
-                  ...this.state.request,
-                  loadType:{
-                      id:this.props.loadTypeCategories[this.state.clickGoodType].loadTypes[i].id
-                  }
-              }
-          },()=>{
-              console.log(this.state.request)
-          })
+            this.setState({
+                goodName:this.props.loadTypeCategories[this.state.clickGoodType].loadTypes[i].name,
+                request:{
+                    ...this.state.request,
+                    loadType:{
+                        id:this.props.loadTypeCategories[this.state.clickGoodType].loadTypes[i].id
+                    }
+                }
+            },()=>{
+                console.log(this.state.request)
+            })
           break
       }
     }
@@ -260,7 +268,10 @@ class Apply extends React.Component {
             ToastAndroid.show('请选择货物',ToastAndroid.SHORT)
             return
         }
-
+        this.props.dispatch({
+            type:'Apply/apply',
+            payload:this.state.request
+        })
     }
     render() {
         return (
