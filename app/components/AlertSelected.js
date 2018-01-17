@@ -30,8 +30,8 @@ export default class AlertSelected extends Component {
       aHeight: height,
     };
     this.entityList = [];//数据源
-    this.callback = function () {
-    };//回调方法
+    // this.callback = function () {
+    // };//回调方法
   }
  
   render() {
@@ -82,10 +82,9 @@ export default class AlertSelected extends Component {
  
   renderItem(item, i) {
     return (
-      <View style={styles.tipContentView}>
+      <View style={styles.tipContentView} key={i}>
         <View style={{height: 0.5, backgroundColor: '#a9a9a9', width: aWidth}}/>
         <TouchableOpacity
-        key={i}
         onPress={this.choose.bind(this, i)}
       >
           <View style={styles.item}>
@@ -166,14 +165,14 @@ export default class AlertSelected extends Component {
     if (!this.state.hide) {
       this.out();
       this.chooseTimer = setTimeout(()=>{
-        this.callback(i);
+        this.props.callback(i);
       }, 200);
     }
   }
  
- show( entityList, callback) {
+ show( entityList) {
    this.entityList = entityList;
-   this.callback = callback;
+  //  this.callback = callback;
  
    if (this.state.hide) {
      if (entityList && entityList.length > 0) {
