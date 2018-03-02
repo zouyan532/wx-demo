@@ -1,74 +1,80 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, ScrollView, TouchableHighlight} from 'react-native';
 
 import {connect} from 'dva';
 import styles from './styles'
-import Util from './../../utils/CommotUtils.js'
+import {View, ListView } from 'react-native';
+import { Container, Header, Content, Button, Icon, List, ListItem, Text ,Left, Body, Right, Title} from 'native-base';
 
-
-class Setting extends React.Component { 
+const datas=['1','2','3','5','36']
+class Setting extends React.Component {
     constructor(props){
         super(props),
+        this.ds = new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!=r2})
         this.state={
-            sex:true,
+            basic:true,
+            listViewData:datas,
+            isReady: false  
         }
     }
-    OnChangeMale=()=>{
+
+    deleteRow=(secId,rowId,rowMap)=>{
+        rowMap[`${secId}${rowId}`].props.closeRow();
+        const newData = [...this.state.listViewData]
+        newData.splice(rowId,1)
         this.setState({
-            sex:true
+            listViewData:newData
         })
     }
-    OnChangeFemale=()=>{
-        this.setState({
-            sex:false
-        })
-    }
+
+    async componentWillMount() {  
+        await Expo.Font.loadAsync({  
+            'Roboto': require('native-base/Fonts/Roboto.ttf'),  
+            'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),  
+        });  
+        this.setState({ isReady: true });  
+    }  
     render() {
+        const ds = new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!=r2})
+        if (!this.state.isReady) {  
+            return <Expo.AppLoading />;  
+        }  
         return (
-            <ScrollView >
-            <View style={styles.topViewContainer}>
-                <Text style={styles.text}>头像</Text>
-                <Image source={require('../../image/personal_image_portrait.png')} style={styles.headImge}/>
-                <Image source={require('../../image/rn-chevron-right.png')} style={styles.backImage} />
-            </View>     
-            <View style={styles.viewContainer}>
-                <Text style={styles.text}>昵称</Text>
-                <Text style={styles.textContent}>邹言</Text>
-                <Image source={require('../../image/rn-chevron-right.png')} style={styles.backImage} />
-            </View> 
-            <View style={styles.viewContainer}>
-                <Text style={styles.text}>性别</Text>
-                <Text style={styles.textContent}>男</Text>
-                <View style={styles.selectSex}>
-                    <TouchableHighlight onPress={this.OnChangeMale}>
-                        <Image source={this.state.sex?require('../../image/male_selected.png'):require('../../image/male.png')}/>
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={this.OnChangeFemale}>
-                        <Image style={{marginLeft:10}} source={this.state.sex?require('../../image/female.png'):require('../../image/female_selected.png')}/>
-                    </TouchableHighlight>
-                </View>
-        
-            </View>     
-            <View style={styles.viewContainer}>
-                <Text style={styles.text}>生日</Text>
-                <Text style={styles.textContent}>0818</Text>
-                <Image source={require('../../image/rn-chevron-right.png')} style={styles.backImage} />
-            </View>  
-            <View style={styles.topViewContainer}>
-                <Text style={styles.text}>收获地址</Text>
-                <Text style={styles.textContent}>江苏南京</Text>
-                <Image source={require('../../image/rn-chevron-right.png')} style={styles.backImage} />
-            </View>
-            <View style={styles.viewContainer}>
-                <Text style={styles.text}>增票资质</Text>
-                <Image source={require('../../image/rn-chevron-right.png')} style={styles.backImage} />
-            </View>  
-            <View style={styles.topViewContainer}>
-                <Text style={styles.text}>手机号码</Text>
-                <Text style={styles.textContent}>{Util.changePhone("18014889264")}</Text>
-                <Image source={require('../../image/rn-chevron-right.png')} style={styles.backImage} />
-            </View>                   
-            </ScrollView>
+            <Container>
+                <Header >
+                    <Left>
+                        <Button transparent>
+                        <Icon name='arrow-back' />
+                        </Button>
+                    </Left>
+                    <Body style={{alignItems:'center'}}>
+                        <Title style={{alignSelf:'center'}}>Header</Title>
+                    </Body>
+                    <Right>
+                        <Button transparent>
+                        <Icon name='menu' />
+                        </Button>
+                    </Right>
+                </Header>
+                <Content>
+                <List
+                    dataSource={this.ds.cloneWithRows(this.state.listViewData)}
+                    renderRow={data =>
+                    <ListItem>
+                        <Text> {data} </Text>
+                    </ListItem>}
+                    renderLeftHiddenRow={data =>
+                    <Button full onPress={() => alert(data)}>
+                        <Icon active name="information-circle" />
+                    </Button>}
+                    renderRightHiddenRow={(data, secId, rowId, rowMap) =>
+                    <Button full danger onPress={_ => this.deleteRow(secId, rowId, rowMap)}>
+                        <Icon active name="trash" />
+                    </Button>}
+                    leftOpenValue={75}
+                    rightOpenValue={-75}
+                />
+                </Content>
+            </Container>
         );
     }
 }
@@ -77,10 +83,6 @@ const mapStateToProps = (state, ownProps) => {
     
 	console.log(state, ownProps)
 	return {
-        //tab:state.main.tab,//前面的tab可以用this.props.tab调用，后面的tab是全部的
-                      //state里的Models下的命名空间为Main下的state中的变量tab
-                      //当namespace改变是会引起前面的tab变化，并且重新渲染
-            
 	};
 }
 
